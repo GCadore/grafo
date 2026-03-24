@@ -1,6 +1,5 @@
 #include "GrafoLista.h"
 
-// Adiciona um vértice e aloca seu espaço na lista de adjacência [cite: 72]
 bool GrafoLista::inserir(std::string label) {
     vertices.push_back(label);
     adj.push_back(std::list<Aresta>());
