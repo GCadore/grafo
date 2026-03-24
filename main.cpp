@@ -80,7 +80,7 @@ int main() {
                 cin >> label;
                 int indice = grafo->converterLabel(label);
                 if (indice != -1) {
-                    grafo->buscaProfundidade(indice);
+                    //grafo->buscaProfundidade(indice);
                 } else {
                     cout << "Vertice nao encontrado!\n";
                 }
