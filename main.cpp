@@ -2,6 +2,7 @@
 #include <string>
 #include "Grafo.h"
 #include "LeitorArquivo.h"
+#include <vector>
 
 using namespace std;
 
@@ -75,17 +76,23 @@ int main() {
                 break;
             }
             case 6: {
-                string label;
-                cout << "Digite o nome do vertice inicial: ";
-                cin >> label;
-                int indice = grafo->converterLabel(label);
-                if (indice != -1) {
-                    //grafo->buscaProfundidade(indice);
+
+                int totalVertices = grafo->getNumVertices();
+                
+                cout << "Total de Vertices encontrados: " << totalVertices << endl;
+
+                int indice;
+                cout << "Digite o indice inicial para a busca" << endl;
+                cin >> indice;
+
+                if (indice >= 0 && indice < totalVertices) {
+                    cout << "Iniciando DFS no indice " << indice << "..." << endl;
+                    grafo->buscaProfundidade(indice);
                 } else {
-                    cout << "Vertice nao encontrado!\n";
+                    cout << "Indice fora do limite aceitavel!" << endl;
                 }
                 break;
-            }
+    }
             case 0:
                 cout << "Saindo...\n";
                 break;

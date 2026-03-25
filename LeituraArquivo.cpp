@@ -15,12 +15,10 @@ Grafo* LeitorArquivo::carregarGrafo(std::string caminho, bool usarMatriz) {
     int nVertices, nArestas;
     bool dir, pond;
 
-    // 1. Lê a primeira linha de configuração
     if (!(arquivo >> nVertices >> nArestas >> dir >> pond)) {
         return nullptr;
     }
 
-    // 2. Instancia a implementação escolhida
     Grafo* grafo;
     if (usarMatriz) {
         grafo = new GrafoMatriz(dir, pond);
@@ -28,12 +26,10 @@ Grafo* LeitorArquivo::carregarGrafo(std::string caminho, bool usarMatriz) {
         grafo = new GrafoLista(dir, pond);
     }
 
-    // 3. Insere os vértices (usando labels genéricos "V0", "V1", etc. ou lendo do arquivo)
     for (int i = 0; i < nVertices; ++i) {
         grafo->inserir("V" + std::to_string(i));
     }
 
-    // 4. Lê as arestas restantes do arquivo
     int origem, destino;
     float peso;
 

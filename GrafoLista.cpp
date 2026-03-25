@@ -3,18 +3,16 @@
 bool GrafoLista::inserir(std::string label) {
     vertices.push_back(label);
     adj.push_back(std::list<Aresta>());
+    numVertices++;
     return true;
 }
 
-// Remove o vértice e todas as arestas que chegam ou saem dele 
 bool GrafoLista::removerVertice(int indice) {
     if (indice >= vertices.size()) return false;
 
-    // Remove o vértice da lista de nomes e sua lista de adjacência
     vertices.erase(vertices.begin() + indice);
     adj.erase(adj.begin() + indice);
 
-    // Remove referências a este vértice em outras listas e ajusta índices
     for (auto& lista : adj) {
         lista.remove_if([indice](const Aresta& a) { return a.destino == indice; });
         for (auto& aresta : lista) {
@@ -27,10 +25,9 @@ bool GrafoLista::removerVertice(int indice) {
 bool GrafoLista::inserirAresta(int origem, int destino, float peso) {
     if (origem >= vertices.size() || destino >= vertices.size()) return false;
 
-    float p = ponderado ? peso : 1.0f; // Aplica peso se for ponderado 
+    float p = ponderado ? peso : 1.0f; 
     adj[origem].push_back({destino, p});
 
-    // Se não for direcionado, adiciona a aresta de volta [cite: 78, 79]
     if (!direcionado && origem != destino) {
         adj[destino].push_back({origem, p});
     }

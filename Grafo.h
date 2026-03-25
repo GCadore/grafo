@@ -14,7 +14,7 @@ protected:
 
 
 public:
-    Grafo(bool dir, bool pond) : direcionado(dir), ponderado(pond) {}
+    Grafo(bool dir, bool pond) : direcionado(dir), ponderado(pond), numArestas(0), numVertices(0) {}
     virtual ~Grafo() = default;
 
     
@@ -28,6 +28,13 @@ public:
     virtual float pesoAresta(int origem, int destino) = 0;
     virtual std::vector<int> retornarVizinhos(int vertice) = 0;
     virtual int converterLabel(std::string label) = 0;
+    virtual void buscaProfundidade(int inicio);
+    virtual int getNumVertices() const { return numVertices; }
+    virtual int getNumArestas() const { return numArestas; }
+
+
+protected:
+    void dfsRecursivo(int v, std::vector<bool>& visitado);
 };
 
 #endif
