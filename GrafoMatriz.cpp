@@ -6,25 +6,32 @@ GrafoMatriz::GrafoMatriz(bool dir, bool pond) : Grafo(dir, pond) {
 }
 
 bool GrafoMatriz::inserir(std::string label){
-
-    for (size_t i = 0; i < matriz.size(); i++) {
-    matriz[i].push_back(0.0f);
-}
-
-    int novoTamanho = matriz.size() + 1;
-    matriz.push_back(std::vector<float>(novoTamanho, 0.0f));
+    // Primeiro expande as linhas existentes com uma nova coluna
+    for (auto& linha : matriz) {
+        linha.push_back(0.0f);
+    }
+    // Depois adiciona a nova linha com tamanho correto
+    matriz.push_back(std::vector<float>(numVertices + 1, 0.0f));
 
     nomesVertices.push_back(label);
     numVertices++;
-    return true; 
+    return true;
 }
 
-bool GrafoMatriz :: removerVertice(int indice){
+bool GrafoMatriz::removerVertice(int indice){
+    if (indice < 0 || indice >= numVertices) return false;
+
+    // Remove a linha do vértice
     matriz.erase(matriz.begin() + indice);
+
+    // Remove a coluna do vértice em cada linha restante
+    for (auto& linha : matriz) {
+        linha.erase(linha.begin() + indice);
+    }
+
     nomesVertices.erase(nomesVertices.begin() + indice);
     numVertices--;
     return true;
-
 }
 
     std::string GrafoMatriz::labelVertice(int indice){
@@ -34,8 +41,8 @@ bool GrafoMatriz :: removerVertice(int indice){
 
 void GrafoMatriz::imprimeGrafo(){
     std::cout << numVertices << " " << numArestas << " " << direcionado << " " << ponderado << std::endl;
-    for (int i = 0; i < matriz.size(); i++) {
-        for (int j = 0; j < matriz[i].size(); j++) {
+    for (int i = 0; i < (int)matriz.size(); i++) {
+        for (int j = 0; j < (int)matriz[i].size(); j++) {
             if(matriz[i][j] != 0) {
                 if (ponderado) {
                     std::cout << i << " " << j << " " << matriz[i][j] << std::endl;
@@ -84,7 +91,7 @@ float GrafoMatriz::pesoAresta(int origem, int destino){
 
 std::vector<int> GrafoMatriz::retornarVizinhos(int vertice){
     std::vector<int> vizinhos;
-    for (int i = 0; i < matriz[vertice].size(); i++) {
+    for (int i = 0; i < (int)matriz[vertice].size(); i++) {
         if (matriz[vertice][i] != 0) {
             vizinhos.push_back(i);
         }
@@ -93,7 +100,7 @@ std::vector<int> GrafoMatriz::retornarVizinhos(int vertice){
 }
 
 int GrafoMatriz::converterLabel(std::string label){
-    for (int i = 0; i < nomesVertices.size(); i++) {
+    for (int i = 0; i < (int)nomesVertices.size(); i++) {
         if (nomesVertices[i] == label) {
             return i;
         }

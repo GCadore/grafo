@@ -8,7 +8,7 @@ bool GrafoLista::inserir(std::string label) {
 }
 
 bool GrafoLista::removerVertice(int indice) {
-    if (indice >= vertices.size()) return false;
+    if (indice < 0 || indice >= (int)vertices.size()) return false;
 
     vertices.erase(vertices.begin() + indice);
     adj.erase(adj.begin() + indice);
@@ -19,34 +19,37 @@ bool GrafoLista::removerVertice(int indice) {
             if (aresta.destino > indice) aresta.destino--;
         }
     }
+    numVertices--;
     return true;
 }
 
 bool GrafoLista::inserirAresta(int origem, int destino, float peso) {
-    if (origem >= vertices.size() || destino >= vertices.size()) return false;
+    if (origem < 0 || origem >= (int)vertices.size() || destino < 0 || destino >= (int)vertices.size()) return false;
 
-    float p = ponderado ? peso : 1.0f; 
+    float p = ponderado ? peso : 1.0f;
     adj[origem].push_back({destino, p});
 
     if (!direcionado && origem != destino) {
         adj[destino].push_back({origem, p});
     }
+    numArestas++;
     return true;
 }
 
 bool GrafoLista::removerAresta(int origem, int destino) {
-    if (origem >= vertices.size() || destino >= vertices.size()) return false;
+    if (origem < 0 || origem >= (int)vertices.size() || destino < 0 || destino >= (int)vertices.size()) return false;
 
     adj[origem].remove_if([destino](const Aresta& a) { return a.destino == destino; });
 
     if (!direcionado) {
         adj[destino].remove_if([origem](const Aresta& a) { return a.destino == origem; });
     }
+    numArestas--;
     return true;
 }
 
 bool GrafoLista::existeAresta(int origem, int destino) {
-    if (origem >= vertices.size()) return false;
+    if (origem < 0 || origem >= (int)vertices.size()) return false;
     for (const auto& a : adj[origem]) {
         if (a.destino == destino) return true;
     }
@@ -54,7 +57,7 @@ bool GrafoLista::existeAresta(int origem, int destino) {
 }
 
 float GrafoLista::pesoAresta(int origem, int destino) {
-    if (origem >= vertices.size()) return 0;
+    if (origem < 0 || origem >= (int)vertices.size()) return 0;
     for (const auto& a : adj[origem]) {
         if (a.destino == destino) return a.peso;
     }
@@ -63,7 +66,7 @@ float GrafoLista::pesoAresta(int origem, int destino) {
 
 std::vector<int> GrafoLista::retornarVizinhos(int vertice) {
     std::vector<int> vizinhos;
-    if (vertice < adj.size()) {
+    if (vertice >= 0 && vertice < (int)adj.size()) {
         for (const auto& a : adj[vertice]) {
             vizinhos.push_back(a.destino);
         }
@@ -72,7 +75,7 @@ std::vector<int> GrafoLista::retornarVizinhos(int vertice) {
 }
 
 void GrafoLista::imprimeGrafo() {
-    for (int i = 0; i < vertices.size(); ++i) {
+    for (int i = 0; i < (int)vertices.size(); ++i) {
         std::cout << vertices[i] << " (" << i << "): ";
         for (const auto& a : adj[i]) {
             std::cout << "-> " << vertices[a.destino] << "[" << a.peso << "] ";
@@ -82,11 +85,11 @@ void GrafoLista::imprimeGrafo() {
 }
 
 std::string GrafoLista::labelVertice(int indice) {
-    return (indice < vertices.size()) ? vertices[indice] : "";
+    return (indice >= 0 && indice < (int)vertices.size()) ? vertices[indice] : "";
 }
 
 int GrafoLista::converterLabel(std::string label) {
-    for (int i = 0; i < vertices.size(); i++) {
+    for (int i = 0; i < (int)vertices.size(); i++) {
         if (vertices[i] == label) {
             return i;
         }
