@@ -40,17 +40,26 @@ bool GrafoMatriz::removerVertice(int indice){
 }
 
 void GrafoMatriz::imprimeGrafo(){
-    std::cout << numVertices << " " << numArestas << " " << direcionado << " " << ponderado << std::endl;
-    for (int i = 0; i < (int)matriz.size(); i++) {
-        for (int j = 0; j < (int)matriz[i].size(); j++) {
-            if(matriz[i][j] != 0) {
-                if (ponderado) {
-                    std::cout << i << " " << j << " " << matriz[i][j] << std::endl;
-                } else {
-                    std::cout << i << " " << j << std::endl;
-                }
-            }
+   std::cout << "\n--- Matriz de Adjacencia ---" << std::endl;
+    
+    // Opcional: Imprime o cabeçalho das colunas para facilitar a visualização
+    std::cout << "    ";
+    for(int i = 0; i < numVertices; i++){
+        std::cout << i << " ";
+    }
+    std::cout << "\n  ";
+    for(int i = 0; i < numVertices; i++){
+        std::cout << "--";
+    }
+    std::cout << std::endl;
+
+    // Imprime as linhas da matriz
+    for (int i = 0; i < numVertices; i++) {
+        std::cout << i << " | "; // Número da linha
+        for (int j = 0; j < numVertices; j++) {
+            std::cout << matriz[i][j] << " ";
         }
+        std::cout << std::endl;
     }
 }
 

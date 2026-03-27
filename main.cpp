@@ -35,6 +35,7 @@ int main() {
         cout << "4. Verificar se Existe Aresta" << endl;
         cout << "5. Ver Peso da Aresta" << endl;
         cout << "6. Busca em profundidade" << endl;
+        cout << "7. Tabela de navegacao Dijkstra" << endl;
         cout << "0. Sair" << endl;
         cout << "=============================" << endl;
         cout << "Escolha uma opcao: ";
@@ -92,7 +93,28 @@ int main() {
                     cout << "Indice fora do limite aceitavel!" << endl;
                 }
                 break;
-    }
+            }
+            case 7:{
+
+                int verticeOrigem;
+                cout << "\n--- Busca de Caminho Minimo (Dijkstra) ---" << endl;
+                cout << "Digite o ID do vertice de origem: ";
+                
+                if (!(cin >> verticeOrigem)) {
+                    cout << "Erro: Valor invalido! Por favor, digite apenas numeros inteiros." << endl;
+                    cin.clear(); 
+                    cin.ignore(10000, '\n'); 
+                    break; 
+                }
+
+                if (grafo != nullptr) {
+                    grafo->dijkstra(verticeOrigem);
+                } else {
+                    cout << "Erro: Nenhum grafo carregado na memoria!" << endl;
+                }
+                
+                break;
+            }
             case 0:
                 cout << "Saindo...\n";
                 break;

@@ -51,6 +51,7 @@ void Grafo::dfsRecursivo(int v, vector<bool>& visitado) {
 }
 
 void Grafo::dijkstra(int verticeInicial) {
+
     if (verticeInicial < 0 || verticeInicial >= numVertices) {
         std::cout << "Indice de vertice invalido para o Dijkstra!" << std::endl;
         return;
@@ -110,6 +111,35 @@ void Grafo::dijkstra(int verticeInicial) {
 
         for(int i=0; i<numVertices; i++){
             if(!tabela[i].fechado) todosFechados = false;
+        }
+    }
+
+    string textoVertice = labelVertice(verticeInicial);
+    cout << "imprimindo Djikstra para vertice " << textoVertice << endl;
+
+    for (int i = 0; i < numVertices; i++) {
+
+        cout << "Para " << labelVertice(i) << " -> Distancia minima: ";
+        
+        if (tabela[i].distancia == infinito) {
+            cout << "Inalcancavel\n";
+        } else {
+            cout << tabela[i].distancia << " | Caminho: ";
+            
+            // 1. Rastrear o caminho de trás para frente
+            vector<int> caminho;
+            int atual = i;
+            while (atual != -1) {
+                caminho.push_back(atual);
+                atual = tabela[atual].anterior;
+            }
+            
+            // 2. Imprimir na ordem correta (da origem até o destino)
+            for (int j = caminho.size() - 1; j >= 0; j--) {
+                cout << labelVertice(caminho[j]);
+                if (j > 0) cout << " -> "; // Coloca a setinha entre os vértices
+            }
+            cout << endl;
         }
     }
 }
