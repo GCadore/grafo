@@ -3,6 +3,15 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <limits>
+
+//usado para djikstra
+struct EstadoVertice {
+    float distancia;
+    int anterior;
+    bool fechado; 
+};
+
 
 class Grafo {
 protected:
@@ -30,6 +39,7 @@ public:
     // Funções concretas da base 
     void bfs(int inicio);
     void buscaProfundidade(int inicio);
+    void dijkstra(int verticeInicial);
 
     int getNumVertices() const { return numVertices; }
     int getNumArestas() const { return numArestas; }
