@@ -1,0 +1,184 @@
+#include <iostream>
+#include <string>
+#include "Grafo.h"
+#include "LeitorArquivo.h"
+#include <vector>
+#include <chrono>
+#include "Coloracao.h"
+
+using namespace std;
+
+int main() {
+    string nomeArquivo;
+    int tipoEstrutura;
+
+    cout << "=== CARREGAR GRAFO DE ARQUIVO ===" << endl;
+    cout << "Digite o nome do arquivo (ex: grafo.txt): ";
+    cin >> nomeArquivo;
+
+    cout << "Escolha a representacao (1 - Matriz de Adj., 2 - Lista de Adj.): ";
+    cin >> tipoEstrutura;
+
+    // Passo 2: Usar o Leitor para criar o grafo automaticamente
+    // O leitor já resolve se o grafo é direcionado ou ponderado lendo o arquivo!
+    Grafo* grafo = LeitorArquivo::carregarGrafo(nomeArquivo, tipoEstrutura == 1);
+
+    if (grafo == nullptr) {
+        cout << "Erro ao carregar o grafo. Verifique o arquivo." << endl;
+        return 1;
+    }
+
+    int opcao = -1;
+    while(opcao != 0) {
+        cout << "\n======= MENU DO GRAFO (MODO ARQUIVO) =======" << endl;
+        cout << "1. Imprimir Grafo (Verificar estrutura)" << endl;
+        cout << "2. Inserir Aresta (Manual)" << endl;
+        cout << "3. Remover Aresta" << endl;
+        cout << "4. Verificar se Existe Aresta" << endl;
+        cout << "5. Ver Peso da Aresta" << endl;
+        cout << "6. Busca em profundidade" << endl;
+        cout << "7. Tabela de navegacao Dijkstra" << endl;
+        cout << "8. Coloracao Gulosa" << endl;
+        cout << "9. Welsh Powell" << endl;
+        cout << "10. DSATUR" << endl;
+        cout << "11. Forca Bruta" << endl;
+        cout << "0. Sair" << endl;
+        cout << "=============================" << endl;
+        cout << "Escolha uma opcao: ";
+        cin >> opcao;
+
+        switch(opcao) {
+            case 1:
+                cout << "\n--- Estrutura Atual ---\n";
+                grafo->imprimeGrafo();
+                break;
+            case 2: {
+                int o, d; float p;
+                cout << "Origem (id): "; cin >> o;
+                cout << "Destino (id): "; cin >> d;
+                cout << "Peso: "; cin >> p;
+                grafo->inserirAresta(o, d, p);
+                break;
+            }
+            case 3: {
+                int o, d;
+                cout << "Origem (id): "; cin >> o;
+                cout << "Destino (id): "; cin >> d;
+                grafo->removerAresta(o, d);
+                break;
+            }
+            case 4: {
+                int o, d;
+                cout << "Origem (id): "; cin >> o;
+                cout << "Destino (id): "; cin >> d;
+                if(grafo->existeAresta(o, d)) cout << "Existe!\n";
+                else cout << "Nao existe!\n";
+                break;
+            }
+            case 5: {
+                int o, d;
+                cout << "Origem (id): "; cin >> o;
+                cout << "Destino (id): "; cin >> d;
+                cout << "Peso: " << grafo->pesoAresta(o, d) << endl;
+                break;
+            }
+            case 6: {
+
+                int totalVertices = grafo->getNumVertices();
+                
+                cout << "Total de Vertices encontrados: " << totalVertices << endl;
+
+                int indice;
+                cout << "Digite o indice inicial para a busca" << endl;
+                cin >> indice;
+
+                if (indice >= 0 && indice < totalVertices) {
+                    cout << "Iniciando DFS no indice " << indice << "..." << endl;
+                    grafo->buscaProfundidade(indice);
+                } else {
+                    cout << "Indice fora do limite aceitavel!" << endl;
+                }
+                break;
+            }
+            case 7:{
+
+                int verticeOrigem;
+                cout << "\n--- Busca de Caminho Minimo (Dijkstra) ---" << endl;
+                cout << "Digite o ID do vertice de origem: ";
+                
+                if (!(cin >> verticeOrigem)) {
+                    cout << "Erro: Valor invalido! Por favor, digite apenas numeros inteiros." << endl;
+                    cin.clear(); 
+                    cin.ignore(10000, '\n'); 
+                    break; 
+                }
+
+                if (grafo != nullptr) {
+                    grafo->dijkstra(verticeOrigem);
+                } else {
+                    cout << "Erro: Nenhum grafo carregado na memoria!" << endl;
+                }
+                
+                break;
+            }
+            case 8: {
+                auto inicio = chrono::high_resolution_clock::now();
+                vector<int> cores = Coloracao::guloso(grafo);
+                auto fim = chrono::high_resolution_clock::now();
+                double tempo = chrono::duration<double, milli>(fim - inicio).count();
+                Coloracao::imprimirResultado(grafo,cores,tempo);
+                break;
+            }
+
+            case 9: {
+                cout << "\n--- Welsh Powell ---\n";
+                auto inicio = chrono::high_resolution_clock::now();
+                vector<int> cores = Coloracao::welshPowell(grafo);
+                auto fim = chrono::high_resolution_clock::now();
+                double tempo = chrono::duration<double, milli>(fim - inicio).count();
+
+                Coloracao::imprimirResultado(grafo,cores,tempo);
+
+            break;
+        }
+
+            case 10: {
+
+            cout << "\n--- DSATUR ---\n";
+            auto inicio = chrono::high_resolution_clock::now();
+            vector<int> cores = Coloracao::dsatur(grafo);
+            auto fim = chrono::high_resolution_clock::now();
+            double tempo = chrono::duration<double, milli>(fim - inicio).count();
+
+            Coloracao::imprimirResultado(grafo,cores,tempo);
+
+            break;
+        }
+
+            case 11: {
+
+            cout << "\n--- Forca Bruta ---\n";
+            auto inicio = chrono::high_resolution_clock::now();
+            vector<int> cores = Coloracao::forcaBruta(grafo);
+            auto fim = chrono::high_resolution_clock::now();
+            double tempo = chrono::duration<double, milli>(fim - inicio).count();
+
+            if (!cores.empty()) {
+
+                Coloracao::imprimirResultado(grafo,cores,tempo);
+            }
+
+    break;
+}
+            
+            case 0:
+                cout << "Saindo...\n";
+                break;
+            default:
+                cout << "Opcao invalida.\n";
+        }
+    }
+
+    delete grafo;
+    return 0;
+}
