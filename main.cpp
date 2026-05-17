@@ -3,6 +3,8 @@
 #include "Grafo.h"
 #include "LeitorArquivo.h"
 #include <vector>
+#include <chrono>
+#include "Coloracao.h"
 
 using namespace std;
 
@@ -36,6 +38,10 @@ int main() {
         cout << "5. Ver Peso da Aresta" << endl;
         cout << "6. Busca em profundidade" << endl;
         cout << "7. Tabela de navegacao Dijkstra" << endl;
+        cout << "8. Coloracao Gulosa" << endl;
+        cout << "9. Welsh Powell" << endl;
+        cout << "10. DSATUR" << endl;
+        cout << "11. Forca Bruta" << endl;
         cout << "0. Sair" << endl;
         cout << "=============================" << endl;
         cout << "Escolha uma opcao: ";
@@ -115,6 +121,56 @@ int main() {
                 
                 break;
             }
+            case 8: {
+                auto inicio = chrono::high_resolution_clock::now();
+                vector<int> cores = Coloracao::guloso(grafo);
+                auto fim = chrono::high_resolution_clock::now();
+                double tempo = chrono::duration<double, milli>(fim - inicio).count();
+                Coloracao::imprimirResultado(grafo,cores,tempo);
+                break;
+            }
+
+            case 9: {
+                cout << "\n--- Welsh Powell ---\n";
+                auto inicio = chrono::high_resolution_clock::now();
+                vector<int> cores = Coloracao::welshPowell(grafo);
+                auto fim = chrono::high_resolution_clock::now();
+                double tempo = chrono::duration<double, milli>(fim - inicio).count();
+
+                Coloracao::imprimirResultado(grafo,cores,tempo);
+
+            break;
+        }
+
+            case 10: {
+
+            cout << "\n--- DSATUR ---\n";
+            auto inicio = chrono::high_resolution_clock::now();
+            vector<int> cores = Coloracao::dsatur(grafo);
+            auto fim = chrono::high_resolution_clock::now();
+            double tempo = chrono::duration<double, milli>(fim - inicio).count();
+
+            Coloracao::imprimirResultado(grafo,cores,tempo);
+
+            break;
+        }
+
+            case 11: {
+
+            cout << "\n--- Forca Bruta ---\n";
+            auto inicio = chrono::high_resolution_clock::now();
+            vector<int> cores = Coloracao::forcaBruta(grafo);
+            auto fim = chrono::high_resolution_clock::now();
+            double tempo = chrono::duration<double, milli>(fim - inicio).count();
+
+            if (!cores.empty()) {
+
+                Coloracao::imprimirResultado(grafo,cores,tempo);
+            }
+
+    break;
+}
+            
             case 0:
                 cout << "Saindo...\n";
                 break;
