@@ -5,6 +5,7 @@
 #include <vector>
 #include <chrono>
 #include "Coloracao.h"
+#include "ArvoreGeradora.h"
 
 using namespace std;
 
@@ -42,6 +43,8 @@ int main() {
         cout << "9. Welsh Powell" << endl;
         cout << "10. DSATUR" << endl;
         cout << "11. Forca Bruta" << endl;
+        cout << "12. Arvore Geradora Minima (Prim)" << endl;
+        cout << "12+1. Arvore Geradora Minima (Kruskal)" << endl;
         cout << "0. Sair" << endl;
         cout << "=============================" << endl;
         cout << "Escolha uma opcao: ";
@@ -167,9 +170,36 @@ int main() {
 
                 Coloracao::imprimirResultado(grafo,cores,tempo);
             }
+        }
+            case 12: {
 
-    break;
-}
+                cout << "\n--- Arvore Geradora Minima (Prim) ---\n";
+                auto inicio = chrono::high_resolution_clock::now();
+                
+                // Chama a classe e pega o vetor de arestas
+                vector<Aresta> arvore = ArvoreGeradora::prim(grafo);
+                
+                auto fim = chrono::high_resolution_clock::now();
+                double tempo = chrono::duration<double, milli>(fim - inicio).count();
+
+                // Imprime a árvore e o tempo
+                ArvoreGeradora::imprimirResultado(arvore, tempo);
+                break;
+            }
+
+            case 13: {
+
+                cout << "\n--- Arvore Geradora Minima (Kruskal) ---\n";
+                auto inicio = chrono::high_resolution_clock::now();
+                
+                vector<Aresta> arvore = ArvoreGeradora::kruskal(grafo);
+                
+                auto fim = chrono::high_resolution_clock::now();
+                double tempo = chrono::duration<double, milli>(fim - inicio).count();
+
+                ArvoreGeradora::imprimirResultado(arvore, tempo);
+                break;
+            }
             
             case 0:
                 cout << "Saindo...\n";
